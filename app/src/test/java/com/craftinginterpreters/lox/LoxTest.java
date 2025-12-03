@@ -3,11 +3,53 @@
  */
 package com.craftinginterpreters.lox;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 class LoxTest {
-    @Test void appHasAGreeting() {
-        var classUnderTest = new Lox();
-    }
+
+  @Test
+  void scannerHandles_InlineComment() {
+
+    var input = "/* This is a test */";
+
+    var scanner = new Scanner(input);
+    var tokens = scanner.scanTokens();
+
+    Assertions.assertEquals(1, tokens.size());
+
+    var eofToken = tokens.getFirst();
+    Assertions.assertEquals(1, eofToken.line);
+    Assertions.assertEquals(TokenType.EOF, eofToken.type);
+  }
+
+  @Test
+  void scannerHandles_Nested_InlineComments() {
+
+    var input = "/* This is a comment /* This is a nested comment */*/";
+
+    var scanner = new Scanner(input);
+    var tokens = scanner.scanTokens();
+
+    Assertions.assertEquals(1, tokens.size());
+
+    var eofToken = tokens.getFirst();
+    Assertions.assertEquals(1, eofToken.line);
+    Assertions.assertEquals(TokenType.EOF, eofToken.type);
+  }
+
+  @Test
+  void scannerHandles_MultiLine_Nested_InlineComments() {
+
+    var input = "/* This is a comment \nthis is the same comment on a different line";
+
+    var scanner = new Scanner(input);
+    var tokens = scanner.scanTokens();
+
+    Assertions.assertEquals(1, tokens.size());
+
+    var eofToken = tokens.getFirst();
+    Assertions.assertEquals(2, eofToken.line);
+    Assertions.assertEquals(TokenType.EOF, eofToken.type);
+  }
 }
