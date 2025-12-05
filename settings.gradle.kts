@@ -11,4 +11,4 @@ plugins {
 }
 
 rootProject.name = "crafting-interpreters"
-include("app")
+include("app", "tools")
